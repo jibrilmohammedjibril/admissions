@@ -6,7 +6,7 @@ import uuid
 import os
 from datetime import timedelta
 import shutil
-
+from fastapi.middleware.cors import CORSMiddleware
 from database import get_db, engine
 import models, schemas, auth
 from models import Base
