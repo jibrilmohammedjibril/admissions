@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Depends, HTTPException, status, UploadFile, File
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
-from typing import Optional
+from typing import Optional, List
 import uuid
 import os
 from datetime import timedelta
@@ -47,7 +47,7 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     db.refresh(db_user)
     return db_user
 
-@app.post("/token", response_model=schemas.Token)
+@app.post("/token")
 async def login_for_access_token(
     form_data: OAuth2PasswordRequestForm = Depends(),
     db: Session = Depends(get_db)
@@ -63,7 +63,17 @@ async def login_for_access_token(
     access_token = auth.create_access_token(
         data={"sub": user.email}, expires_delta=access_token_expires
     )
-    return {"access_token": access_token, "token_type": "bearer"}
+    return {
+        "access_token": access_token,
+        "token_type": "bearer",
+        "user": {
+            "email": user.email,
+            "id": user.uuid,
+            "program": user.program,
+            "full_name": user.full_name
+        }
+    }
+
 
 @app.post("/application/upload", response_model=schemas.Application)
 async def upload_application(
@@ -136,4 +146,6 @@ def get_application(
         raise HTTPException(status_code=404, detail="Application not found")
     if application.user_id != current_user.id:
         raise HTTPException(status_code=403, detail="Not enough permissions")
-    return application 
+    return application
+
+
