@@ -6,7 +6,7 @@ import os
 
 load_dotenv()
 
-SQLALCHEMY_DATABASE_URL = "postgresql://postgres:123456789@localhost:5432/admissions_db"
+SQLALCHEMY_DATABASE_URL = "postgresql://admissions_tac1_user:vpNV7a86TTzN9KqUVsqaLBOgQ7ql07je@dpg-cvn9sqk9c44c73dkvr8g-a.oregon-postgres.render.com/admissions_tac1"
 
 # Create engine with echo=True to see SQL statements
 engine = create_engine(SQLALCHEMY_DATABASE_URL, echo=True)
